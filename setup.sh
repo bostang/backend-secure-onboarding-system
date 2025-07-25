@@ -6,7 +6,7 @@ cat << EOF > .env
 DB_URL=jdbc:postgresql://localhost:5432/customer_registration
 DB_USERNAME=postgres
 DB_PASSWORD=password
-JWT_SECRET=mySecretKey123456789mySecretKey123456789
+JWT_SECRET=90385881f4876e643cdf5fa2b28c1494469133ddf0e6aee2784eeab3f4f342e82b51ea0c
 JWT_EXPIRATION=86400000
 SERVER_PORT=8080
 EOF

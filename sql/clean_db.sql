@@ -1,6 +1,6 @@
 -- ===== CLEAN CUSTOMER REGISTRATION DATABASE =====
 -- File: clean_customer_registration.sql
--- Jalankan dengan: psql postgres -f sql/clean_db.sql
+-- Jalankan dengan: psql -U postgres -f sql/clean_db.sql
 
 -- Connect ke database customer_registration
 \c customer_registration;
