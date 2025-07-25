@@ -23,14 +23,24 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
+import java.util.List; // Import List
+
+import javax.annotation.PostConstruct; // Untuk anotasi @PostConstruct
+import org.slf4j.Logger;             // Untuk interface Logger
+import org.slf4j.LoggerFactory;      // Untuk factory Logger
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    // Logger untuk mencatat informasi penting
+    @SuppressWarnings("unused") // Untuk menghindari peringatan unused jika logger tidak digunakan
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class); // Tambahkan baris ini
+
+    // Menggunakan List<String> untuk secara otomatis memisahkan nilai koma
     @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:5173}")
-    private String allowedOrigins;
+    private List<String> allowedOrigins; // Mengubah tipe data menjadi List<String>
 
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
@@ -38,6 +48,11 @@ public class SecurityConfig {
     @Autowired
     private CustomerUserDetailsService userDetailsService;
 
+     // Tambahkan metode @PostConstruct ini
+    @PostConstruct
+    public void init() {
+        logger.info("CORS Allowed Origins configured: {}", allowedOrigins);
+    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -150,11 +165,22 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // SECURE CORS CONFIGURATION
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-            "http://localhost:3000",
-            "http://localhost:5173",
-            "https://*.trycloudflare.com"
-        ));
+        // Gunakan nilai dari properti 'allowedOrigins' yang sudah di-inject
+        // Jika Anda ingin mendukung pola (misalnya *.trycloudflare.com), gunakan setAllowedOriginPatterns
+        // Jika Anda ingin mendukung origin spesifik yang berasal dari list, gunakan setAllowedOrigins
+        // Karena `allowedOrigins` sekarang adalah List<String>, kita bisa langsung menggunakannya.
+        configuration.setAllowedOriginPatterns(allowedOrigins); // Menggunakan List<String> langsung dari @Value
+
+        // Tambahkan kembali pola cloudflare jika itu adalah kebutuhan spesifik
+        // Jika `allowedOrigins` hanya akan berisi URL spesifik, gunakan `setAllowedOrigins`
+        // Jika Anda ingin fleksibilitas pola (seperti *.trycloudflare.com), `setAllowedOriginPatterns` adalah pilihan yang tepat.
+        // Pastikan `allowedOrigins` dari @Value juga bisa menampung pola jika itu yang Anda inginkan.
+        // Untuk contoh ini, kita asumsikan `allowedOrigins` dari @Value akan berisi pola atau URL spesifik.
+        // Jika Anda ingin menggabungkan, Anda bisa lakukan:
+        // List<String> combinedOrigins = new ArrayList<>(allowedOrigins);
+        // combinedOrigins.add("https://*.trycloudflare.com");
+        // configuration.setAllowedOriginPatterns(combinedOrigins);
+
 
         configuration.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"

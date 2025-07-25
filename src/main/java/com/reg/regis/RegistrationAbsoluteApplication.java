@@ -13,9 +13,12 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class RegistrationAbsoluteApplication {
 
     public static void main(String[] args) {
+        // LAKUKAN KETIKA PENGEMBANGAN LOCAL
+        // KETIKA MENGGUNAKAN DOCKER, .env DIKOMENTARI
+        // KARENA NILAINYA DIAMBIL DARI MANIFEST (.YAML) DI KUBERNETES
         // Load .env variables
-        Dotenv dotenv = Dotenv.load();
-        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+        // Dotenv dotenv = Dotenv.load();
+        // dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
         ConfigurableApplicationContext context = SpringApplication.run(RegistrationAbsoluteApplication.class, args);
         
