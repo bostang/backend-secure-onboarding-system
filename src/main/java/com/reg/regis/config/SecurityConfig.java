@@ -159,11 +159,12 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         // SECURE CORS CONFIGURATION
-        configuration.setAllowedOriginPatterns(Arrays.asList(
-            "http://localhost:3000",
-            "http://localhost:5173",
-            "https://*.trycloudflare.com"
-        ));
+        // configuration.setAllowedOriginPatterns(Arrays.asList(
+        //     "http://localhost:3000",
+        //     "http://localhost:5173",
+        //     "https://*.trycloudflare.com"
+        // ));
+        configuration.setAllowedOriginPatterns(Arrays.asList(this.allowedOrigins.split(",")));
 
         configuration.setAllowedMethods(Arrays.asList(
             "GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"

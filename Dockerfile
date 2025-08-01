@@ -30,16 +30,14 @@ COPY --from=build /app/target/*.jar app.jar
 COPY --from=build /app/.env* ./
 
 # Environment variables (match dengan application.properties)
-ENV DB_URL=jdbc:postgresql://postgres-db:5432/customer_registration
-ENV DB_USERNAME=postgres
-ENV DB_PASSWORD=postgres123
-ENV JWT_SECRET=a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456789012345678901234567890abcdef1234567890abcdef1234567890abcdef
-ENV JWT_EXPIRATION=86400000
-ENV SERVER_PORT=8080
-ENV FIREBASE_CONFIG_PATH=model-parsec-465503-p3-firebase-adminsdk-fbsvc-1e9901efad.json
-ENV DUKCAPIL_SERVICE_URL=http://dukcapil-dummy:8081
-ENV DUKCAPIL_API_KEY=dukcapil-secret-key-123
-ENV APP_CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173,http://wondrdesktop.andrc1613.my.id
+# ENV DB_URL=jdbc:postgresql://postgres-db:5432/customer_registration
+# ENV DB_USERNAME=postgres
+# ENV DB_PASSWORD=postgres123
+# ENV JWT_SECRET=aB3dF6gH9jK2mN5pQ8rS1tU4vW7xY0zA3bC6dE9fG2hJ5kL8mO1pR4sT7uV0wX3y
+# ENV JWT_EXPIRATION=86400000
+# ENV SERVER_PORT=8080
+# ENV FIREBASE_CONFIG_PATH=model-parsec-465503-p3-firebase-adminsdk-fbsvc-1e9901efad.json
+# ENV DUKCAPIL_SERVICE_URL=http://dukcapil-dummy:8081
 
 # Expose port
 EXPOSE 8080
