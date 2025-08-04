@@ -30,7 +30,7 @@ public class SecurityUtil {
     
     // Private IP ranges for security
     private static final Pattern PRIVATE_IP_PATTERN = Pattern.compile(
-        "^(127\\.)|(192\\.168\\.)|(10\\.)|(172\\.1[6-9]\\.)|(172\\.2[0-9]\\.)|(172\\.3[0-1]\\.)|(::1$)|([fF][cCdD])"
+        "^((127\\.)|(192\\.168\\.)|(10\\.)|(172\\.1[6-9]\\.)|(172\\.2[0-9]\\.)|(172\\.3[0-1]\\.)|(::1$)|([fF][cCdD]))"
     );
     
     /**

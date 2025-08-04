@@ -89,9 +89,9 @@ public class LoginController {
                 return ResponseEntity.ok(responseData);
             }
             
-            return ResponseEntity.badRequest().body(Map.of(
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of(
                 "success", false,
-                "error", "Authentication failed"
+                "error", "Invalid credentials"
             ));
             
         }catch (BadCredentialsException e) {
@@ -267,7 +267,10 @@ public class LoginController {
             return ResponseEntity.ok(Map.of("authenticated", false));
             
         } catch (Exception e) {
-            return ResponseEntity.ok(Map.of("authenticated", false));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "success", false,
+                "error", "Unexpected error occurred"
+            ));
         }
     }
     
