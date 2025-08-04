@@ -33,9 +33,6 @@ ARG FIREBASE_SA_CRED_FILE
 # Copy JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Copy .env file to runtime (if any)
-COPY --from=build /app/.env* ./
-
 # Copy the Firebase service account key file from the build stage to the runtime image.
 COPY --from=build /app/src/main/resources/${FIREBASE_SA_CRED_FILE} ./src/main/resources/
 
