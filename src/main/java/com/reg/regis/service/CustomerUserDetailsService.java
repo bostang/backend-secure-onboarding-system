@@ -5,7 +5,6 @@ import com.reg.regis.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,8 +15,6 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class CustomerUserDetailsService implements UserDetailsService {
 
-    // @Autowired
-    // private CustomerRepository customerRepository;
     private final CustomerRepository customerRepository;
 
     @Override

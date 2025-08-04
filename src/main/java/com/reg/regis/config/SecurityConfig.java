@@ -5,9 +5,7 @@ import com.reg.regis.service.CustomerUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -38,12 +36,8 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
 
-    // @Autowired
-    // private JwtAuthFilter jwtAuthFilter;
     private final JwtAuthFilter jwtAuthFilter;
 
-    // @Autowired
-    // private CustomerUserDetailsService userDetailsService;
     private final CustomerUserDetailsService userDetailsService;
 
     @Bean

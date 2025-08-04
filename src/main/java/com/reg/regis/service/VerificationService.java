@@ -11,8 +11,6 @@ import com.reg.regis.repository.CustomerRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import org.hibernate.validator.constraints.pl.REGON;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +21,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class VerificationService {
-    
-    // @Autowired
-    // private CustomerRepository customerRepository;
+
     private final CustomerRepository customerRepository;
     
-    // @Autowired
-    // private DukcapilClientService dukcapilClientService;
     private final DukcapilClientService dukcapilClientService;
 
     /**

@@ -11,12 +11,10 @@ import com.reg.regis.security.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-// import org.springframework.transaction.annotation.Propagation; // Hapus ini jika tidak lagi digunakan secara langsung di sini
 
 import java.util.Optional;
 import java.util.Map;
@@ -26,35 +24,15 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class RegistrationService {
-    
-    // Hapus konstanta terkait login attempts, mereka sekarang di LoginAttemptService
-    // private static final int MAX_LOGIN_ATTEMPTS = 5;
-    // private static final long LOCKOUT_DURATION_MINUTES = 1; 
 
-    // Hapus injeksi diri
-    // @Autowired
-    // private RegistrationService self;
-    
-    // START MODIFIKASI: Injeksi LoginAttemptService yang baru
-    // @Autowired
-    // private LoginAttemptService loginAttemptService;
     private final LoginAttemptService loginAttemptService;
-    // END MODIFIKASI
 
-    // @Autowired
-    // private CustomerRepository customerRepository;
     private final CustomerRepository customerRepository;
 
-    // @Autowired
-    // private PasswordEncoder passwordEncoder;
     private final PasswordEncoder passwordEncoder;
 
-    // @Autowired
-    // private JwtUtil jwtUtil;
     private final JwtUtil jwtUtil;
 
-    // @Autowired
-    // private DukcapilClientService dukcapilClientService;
     private final DukcapilClientService dukcapilClientService;
 
     // Static random untuk thread safety
