@@ -8,7 +8,8 @@ import com.reg.regis.service.VerificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class VerificationController {
     
-    // @Autowired
-    // private VerificationService verificationService;
+    private static final Logger logger = LoggerFactory.getLogger(VerificationController.class);
     private final VerificationService verificationService;
     
     /**
@@ -30,7 +30,8 @@ public class VerificationController {
     @PostMapping("/nik")
     public ResponseEntity<?> verifyNik(@Valid @RequestBody NikVerificationRequest request) {
         try {
-            System.out.println("🔍 Received NIK verification request: " + request);
+            logger.debug("Received NIK verification request for NIK: {}", 
+                request.getNik() != null ? request.getNik().substring(0, 4) + "****" : "null");
             
             VerificationResponse response = verificationService.verifyNik(request);
             
@@ -41,8 +42,7 @@ public class VerificationController {
             ));
             
         } catch (Exception e) {
-            System.err.println("Error in verifyNik: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Error in verifyNik: {}", e.getMessage());
             
             return ResponseEntity.badRequest().body(Map.of(
                 "valid", false,
@@ -66,6 +66,8 @@ public class VerificationController {
             ));
             
         } catch (Exception e) {
+            logger.error("Error in verifyEmail: {}", e.getMessage());
+            
             return ResponseEntity.badRequest().body(Map.of(
                 "available", false,
                 "message", "Terjadi kesalahan saat verifikasi email: " + e.getMessage()
@@ -88,6 +90,8 @@ public class VerificationController {
             ));
             
         } catch (Exception e) {
+            logger.error("Error in verifyPhone: {}", e.getMessage());
+            
             return ResponseEntity.badRequest().body(Map.of(
                 "available", false,
                 "message", "Terjadi kesalahan saat verifikasi nomor telepon: " + e.getMessage()
@@ -120,6 +124,8 @@ public class VerificationController {
             ));
             
         } catch (Exception e) {
+            logger.error("Error in checkNik: {}", e.getMessage());
+            
             return ResponseEntity.badRequest().body(Map.of(
                 "registered", false,
                 "message", "Terjadi kesalahan saat pengecekan NIK: " + e.getMessage()
@@ -135,6 +141,8 @@ public class VerificationController {
         try {
             return ResponseEntity.ok(verificationService.getVerificationStats());
         } catch (Exception e) {
+            logger.error("Error in getVerificationStats: {}", e.getMessage());
+            
             return ResponseEntity.badRequest().body(Map.of(
                 "error", "Terjadi kesalahan saat mengambil statistik: " + e.getMessage()
             ));

@@ -120,7 +120,7 @@ curl -X POST "http://localhost:8080/api/auth/check-password" \
 
 ```bash
 echo "👤 Registration Test - John Doe (Silver):"
-curl -X POST "http://wondrdesktop.andrc1613.my.id/api/auth/register" \
+curl -X POST "http://localhost:8080/api/auth/register" \
   -H "Content-Type: application/json" \
   -c cookies.txt \
   -d '{
@@ -296,7 +296,7 @@ curl -X GET "http://localhost:8080/api/auth/profile" \
 
 ```bash
 echo "🔐 Login Tests:"
-curl -X POST "http://wondrdesktop.andrc1613.my.id/api/auth/login" \
+curl -X POST "http://localhost:8080/api/auth/login" \
   -H "Content-Type: application/json" \
   -c cookies.txt \
   -d '{

@@ -5,11 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.security.SecureRandom;
 import java.util.regex.Pattern;
 
 public class SecurityUtil {
     
     private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
+
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     
     // Patterns for input validation
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
@@ -190,17 +194,35 @@ public class SecurityUtil {
     }
     
     /**
-     * Validate password strength
+     * Validate password strength - Fixed ReDoS vulnerability
      */
     public static boolean isStrongPassword(String password) {
         if (password == null || password.length() < 8) {
             return false;
         }
         
-        boolean hasLower = password.matches(".*[a-z].*");
-        boolean hasUpper = password.matches(".*[A-Z].*");
-        boolean hasDigit = password.matches(".*\\d.*");
-        boolean hasSpecial = password.matches(".*[@$!%*?&].*");
+        // Use simple iteration instead of regex to avoid ReDoS
+        boolean hasLower = false;
+        boolean hasUpper = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+        
+        for (char c : password.toCharArray()) {
+            if (c >= 'a' && c <= 'z') {
+                hasLower = true;
+            } else if (c >= 'A' && c <= 'Z') {
+                hasUpper = true;
+            } else if (c >= '0' && c <= '9') {
+                hasDigit = true;
+            } else if ("@$!%*?&".indexOf(c) != -1) {
+                hasSpecial = true;
+            }
+            
+            // Early exit if all conditions met
+            if (hasLower && hasUpper && hasDigit && hasSpecial) {
+                break;
+            }
+        }
         
         return hasLower && hasUpper && hasDigit && hasSpecial;
     }
@@ -213,7 +235,7 @@ public class SecurityUtil {
         StringBuilder result = new StringBuilder();
         
         for (int i = 0; i < length; i++) {
-            int index = (int) (Math.random() * chars.length());
+            int index = SECURE_RANDOM.nextInt(chars.length());
             result.append(chars.charAt(index));
         }
         

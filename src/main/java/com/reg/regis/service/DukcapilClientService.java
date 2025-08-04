@@ -1,6 +1,5 @@
 package com.reg.regis.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -13,9 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
-/*** SECURITY PATCH ***/
 import org.springframework.core.ParameterizedTypeReference;
-/**********************/
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -25,8 +24,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DukcapilClientService {
 
-    // @Autowired
-    // private RestTemplate restTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(DukcapilClientService.class);
     private final RestTemplate restTemplate;
 
     @Value("${app.dukcapil.base-url}")
@@ -58,8 +56,11 @@ public class DukcapilClientService {
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
 
-            System.out.println("🌐 Calling Dukcapil Service: " + url);
-            System.out.println("📤 Request: " + request);
+            logger.debug("🌐 Calling Dukcapil Service: {}", url);
+            logger.debug("📤 Request: NIK={}, namaLengkap={}, tanggalLahir={}", 
+                nik != null ? nik.substring(0, 4) + "****" : "null", 
+                namaLengkap, 
+                tanggalLahir);
 
             // Make HTTP call
             ResponseEntity<DukcapilResponseDto> response = restTemplate.exchange(
@@ -70,7 +71,8 @@ public class DukcapilClientService {
             );
 
             DukcapilResponseDto responseBody = response.getBody();
-            System.out.println("📥 Response from Dukcapil: " + responseBody);
+            logger.debug("📥 Response from Dukcapil: valid={}", 
+                responseBody != null ? responseBody.isValid() : "null");
 
             if (responseBody != null) {
                 return responseBody;
@@ -79,20 +81,19 @@ public class DukcapilClientService {
             }
 
         } catch (ResourceAccessException e) {
-            System.err.println("❌ Dukcapil Service tidak dapat diakses: " + e.getMessage());
+            logger.error("❌ Dukcapil Service tidak dapat diakses: {}", e.getMessage());
             return new DukcapilResponseDto(false, "Dukcapil Service tidak dapat diakses. Pastikan service berjalan di " + dukcapilBaseUrl);
 
         } catch (HttpClientErrorException e) {
-            System.err.println("❌ Client error dari Dukcapil Service: " + e.getMessage());
+            logger.error("❌ Client error dari Dukcapil Service: {}", e.getMessage());
             return new DukcapilResponseDto(false, "Error validasi dari Dukcapil Service: " + e.getResponseBodyAsString());
 
         } catch (HttpServerErrorException e) {
-            System.err.println("❌ Server error dari Dukcapil Service: " + e.getMessage());
+            logger.error("❌ Server error dari Dukcapil Service: {}", e.getMessage());
             return new DukcapilResponseDto(false, "Dukcapil Service mengalami error internal");
 
         } catch (Exception e) {
-            System.err.println("❌ Unexpected error calling Dukcapil Service: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("❌ Unexpected error calling Dukcapil Service: {}", e.getMessage());
             return new DukcapilResponseDto(false, "Terjadi kesalahan saat menghubungi Dukcapil Service: " + e.getMessage());
         }
     }
@@ -114,12 +115,10 @@ public class DukcapilClientService {
 
             HttpEntity<Map<String, String>> entity = new HttpEntity<>(request, headers);
 
-            System.out.println("🌐 Checking NIK existence: " + url);
+            logger.debug("🌐 Checking NIK existence: {}", url);
 
             // Make HTTP call
-            // *** PERBAIKAN BARIS 119 ***
-            // Pastikan ResponseEntity juga dideklarasikan dengan tipe generik yang tepat
-            ResponseEntity<Map<String, Object>> response = restTemplate.exchange( // <--- PERUBAHAN DI SINI
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                 url,
                 HttpMethod.POST,
                 entity,
@@ -134,7 +133,7 @@ public class DukcapilClientService {
             return false;
 
         } catch (Exception e) {
-            System.err.println("❌ Error checking NIK existence: " + e.getMessage());
+            logger.error("❌ Error checking NIK existence: {}", e.getMessage());
             return false;
         }
     }
@@ -146,9 +145,7 @@ public class DukcapilClientService {
         try {
             String url = dukcapilBaseUrl + "/health";
 
-            // *** PERBAIKAN BARIS 144 ***
-            // Pastikan ResponseEntity juga dideklarasikan dengan tipe generik yang tepat
-            ResponseEntity<Map<String, Object>> response = restTemplate.exchange( // <--- PERUBAHAN DI SINI
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
                 null, // No request body for GET
@@ -159,7 +156,7 @@ public class DukcapilClientService {
             return body != null && "OK".equals(body.get("status"));
 
         } catch (Exception e) {
-            System.err.println("❌ Dukcapil Service health check failed: " + e.getMessage());
+            logger.error("❌ Dukcapil Service health check failed: {}", e.getMessage());
             return false;
         }
     }

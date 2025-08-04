@@ -411,10 +411,34 @@ public class RegistrationService {
         int score = 0;
         
         if (password.length() >= 8) score++;
-        if (password.matches(".*[a-z].*")) score++;
-        if (password.matches(".*[A-Z].*")) score++;
-        if (password.matches(".*\\d.*")) score++;
-        if (password.matches(".*[@$!%*?&].*")) score++;
+        
+        // Use character iteration instead of regex to avoid ReDoS
+        boolean hasLower = false;
+        boolean hasUpper = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+        
+        for (char c : password.toCharArray()) {
+            if (c >= 'a' && c <= 'z') {
+                hasLower = true;
+            } else if (c >= 'A' && c <= 'Z') {
+                hasUpper = true;
+            } else if (c >= '0' && c <= '9') {
+                hasDigit = true;
+            } else if ("@$!%*?&".indexOf(c) != -1) {
+                hasSpecial = true;
+            }
+            
+            // Early exit if all conditions found
+            if (hasLower && hasUpper && hasDigit && hasSpecial) {
+                break;
+            }
+        }
+        
+        if (hasLower) score++;
+        if (hasUpper) score++;
+        if (hasDigit) score++;
+        if (hasSpecial) score++;
         
         return switch (score) {
             case 0, 1, 2 -> "lemah";
