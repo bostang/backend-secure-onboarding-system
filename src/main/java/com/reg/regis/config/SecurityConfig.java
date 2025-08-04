@@ -60,7 +60,6 @@ public class SecurityConfig {
             .requestMatchers("/auth/check-auth").permitAll()
             .requestMatchers("/verification/**").permitAll()
             .requestMatchers("/actuator/**").permitAll()
-            // .requestMatchers("/actuator/health").permitAll()
             .requestMatchers("/error").permitAll()
             
             // TAMBAH YANG INI untuk Swagger:
@@ -151,13 +150,6 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-        // SECURE CORS CONFIGURATION
-        // configuration.setAllowedOriginPatterns(Arrays.asList(
-        //     "http://localhost:3000",
-        //     "http://localhost:5173",
-        //     "https://*.trycloudflare.com"
-        // ));
         configuration.setAllowedOriginPatterns(Arrays.asList(this.allowedOrigins.split(",")));
 
         configuration.setAllowedMethods(Arrays.asList(

@@ -87,7 +87,6 @@ public class Customer {
     @Column(name = "tujuan_pembuatan_rekening", nullable = false)
     private String tujuanPembuatanRekening;
     
-    // @NotNull(message = "Kode rekening wajib diisi")
     @Column(name = "kode_rekening")
     private Integer kodeRekening;
 
@@ -100,11 +99,6 @@ public class Customer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    // SEANDAINYA DIIMPLEMENTASIKAN EMAIL VERIFICATION
-    // @Column(name = "email_verified", nullable = false)
-    // @JsonIgnore
-    // private Boolean emailVerified = false;
-    
     // FAILED LOGIN ATTEMPTS
     @JsonIgnore
     @Column(name = "failed_login_attempts", nullable = false)
@@ -115,12 +109,10 @@ public class Customer {
     @Column(name = "account_locked_until")
     private LocalDateTime accountLockedUntil; // Kapan akun akan dibuka
 
-    // @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "alamat_id")
     private Alamat alamat;
     
-    // @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "wali_id", nullable = true)
     private Wali wali;
@@ -167,7 +159,6 @@ public class Customer {
     public String getTipeAkun() { return tipeAkun; }
     public void setTipeAkun(String tipeAkun) { this.tipeAkun = tipeAkun; }
     
-    // NEW GETTER/SETTER: jenisKartu
     public String getJenisKartu() { return jenisKartu; }
     public void setJenisKartu(String jenisKartu) { this.jenisKartu = jenisKartu; }
     
@@ -210,11 +201,6 @@ public class Customer {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     
-    // SEANDAINYA DIIMPLEMENTASIKAN EMAIL VERIFICATION
-    // public Boolean getEmailVerified() { return emailVerified; }
-    // public void setEmailVerified(Boolean emailVerified) { this.emailVerified = emailVerified; }
-    
-    // NEW GETTER/SETTER: untuk mekaniksme maksimum login gagal
     public LocalDateTime getAccountLockedUntil() { return accountLockedUntil; }
     public void setAccountLockedUntil(LocalDateTime accountLockedUntil) { this.accountLockedUntil = accountLockedUntil; }
 

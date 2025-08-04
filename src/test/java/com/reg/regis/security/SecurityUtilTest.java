@@ -475,30 +475,6 @@ public class SecurityUtilTest {
         }
     }
 
-    // ======================= isStrongPassword Tests =======================
-    @Test
-    void testIsStrongPassword_strongPassword_shouldReturnTrue() {
-        assertTrue(SecurityUtil.isStrongPassword("MyStr0ng@Pass"));
-        assertTrue(SecurityUtil.isStrongPassword("ComplexPass123!"));
-        assertTrue(SecurityUtil.isStrongPassword("Abc123@def"));
-    }
-
-    @Test
-    void testIsStrongPassword_weakPassword_shouldReturnFalse() {
-        assertFalse(SecurityUtil.isStrongPassword("password")); // No uppercase, digit, special
-        assertFalse(SecurityUtil.isStrongPassword("PASSWORD123")); // No lowercase, special
-        assertFalse(SecurityUtil.isStrongPassword("Password")); // No digit, special
-        assertFalse(SecurityUtil.isStrongPassword("Pass@")); // Too short
-        assertFalse(SecurityUtil.isStrongPassword("12345678")); // No letters, special
-    }
-
-    @Test
-    void testIsStrongPassword_nullOrEmptyPassword_shouldReturnFalse() {
-        assertFalse(SecurityUtil.isStrongPassword(null));
-        assertFalse(SecurityUtil.isStrongPassword(""));
-        assertFalse(SecurityUtil.isStrongPassword("short"));
-    }
-
     // ======================= generateSecureRandomString Tests =======================
     @Test
     void testGenerateSecureRandomString_shouldReturnCorrectLength() {

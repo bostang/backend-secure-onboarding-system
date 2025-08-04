@@ -61,7 +61,6 @@ public class RegistrationRequest {
     @NotBlank(message = "Tujuan pembuatan rekening wajib diisi")
     private String tujuanPembuatanRekening;
     
-    // @NotNull(message = "Kode rekening wajib diisi")
     private Integer kodeRekening;
 
     private String nomorKartuDebitVirtual;
@@ -70,9 +69,8 @@ public class RegistrationRequest {
     @NotNull(message = "Alamat wajib diisi")
     private AlamatRequest alamat;
     
-    // UPDATED: Wali sekarang OPTIONAL (bisa null)
     @Valid
-    private WaliRequest wali;  // Removed @NotNull annotation
+    private WaliRequest wali;  
     
     // Constructors
     public RegistrationRequest() {}
@@ -99,7 +97,6 @@ public class RegistrationRequest {
     public String getTipeAkun() { return tipeAkun; }
     public void setTipeAkun(String tipeAkun) { this.tipeAkun = tipeAkun; }
     
-    // NEW GETTER/SETTER: jenisKartu
     public String getJenisKartu() { return jenisKartu; }
     public void setJenisKartu(String jenisKartu) { 
         this.jenisKartu = (jenisKartu != null && !jenisKartu.isEmpty()) ? jenisKartu : "Silver"; 

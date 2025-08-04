@@ -467,7 +467,7 @@ public class RegistrationService {
     
     public RegistrationStats getRegistrationStats() {
         long totalCustomers = customerRepository.countTotalCustomers();
-        long verifiedCustomers = 0; //customerRepository.countVerifiedCustomers();
+        long verifiedCustomers = 0;
         double verificationRate = totalCustomers > 0 ? 
             (double) verifiedCustomers / totalCustomers * 100 : 0;
         boolean dukcapilAvailable = dukcapilClientService.isDukcapilServiceHealthy();

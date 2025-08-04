@@ -36,8 +36,6 @@ import org.springframework.http.HttpStatus; // Import HttpStatus
 @RequiredArgsConstructor
 public class LoginController {
     
-    // @Autowired
-    // private RegistrationService registrationService;
     private final RegistrationService registrationService;
 
     @Value("${app.security.cookie.secure:false}")

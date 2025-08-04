@@ -290,6 +290,10 @@ curl -X GET "http://localhost:8080/api/auth/profile" \
 echo "👤 Profile Access Tests:"
 curl -X GET "http://localhost:8080/api/auth/profile" \
   -b cookies.txt | jq
+
+curl -X GET "http://localhost:8080/api/auth/profile" \
+  -H "Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImlzcyI6IkN1c3RvbWVyLVJlZ2lzdHJhdGlvbi1TZXJ2aWNlIiwiYXVkIjoiY3VzdG9tZXItYXBwIiwiaWF0IjoxNzU0MzEwNDAwLCJleHAiOjE3NTQzOTY4MDAsIm5iZiI6MTc1NDMxMDQwMCwidHlwZSI6ImFjY2Vzc190b2tlbiJ9._Vm1YWXjfzBUXeR0e5Pp0ig20dSKMg5miv-qiYBGDlggz_VH_b393_Cn0Lcsl7JLrdhSURKQUD71_RGOJFD1LA" \
+  -H "Content-Type: application/json" | jq
 ```
 
 #### 8. Login Tests
@@ -340,6 +344,10 @@ curl -X POST "http://localhost:8080/api/auth/refresh-token" \
 echo "🚪 Logout:"
 curl -X POST "http://localhost:8080/api/auth/logout" \
   -b cookies.txt | jq
+
+curl -X GET "http://localhost:8080/api/auth/me" \
+ -H "Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImlzcyI6IkN1c3RvbWVyLVJlZ2lzdHJhdGlvbi1TZXJ2aWNlIiwiYXVkIjoiY3VzdG9tZXItYXBwIiwiaWF0IjoxNzU0MzEwNDAwLCJleHAiOjE3NTQzOTY4MDAsIm5iZiI6MTc1NDMxMDQwMCwidHlwZSI6ImFjY2Vzc190b2tlbiJ9._Vm1YWXjfzBUXeR0e5Pp0ig20dSKMg5miv-qiYBGDlggz_VH_b393_Cn0Lcsl7JLrdhSURKQUD71_RGOJFD1LA" \
+ -H "Content-Type: application/json" | jq
 ```
 
 #### 10. Statistics

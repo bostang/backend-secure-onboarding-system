@@ -21,10 +21,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+    // Ganti nama dari 'logger' ke 'log' untuk menghindari field shadowing
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthFilter.class);
     
     private final JwtUtil jwtUtil;
-
     private final CustomerUserDetailsService userDetailsService;
 
     @Override
@@ -44,7 +44,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if (jwtUtil.validateToken(token)) {
                     email = jwtUtil.getEmailFromToken(token);
                 } else {
-                    logger.warn("Invalid JWT token received from IP: {}", getClientIpAddress(request));
+                    log.warn("Invalid JWT token received from IP: {}", getClientIpAddress(request));
                 }
             }
 
@@ -69,22 +69,22 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                                 SecurityContextHolder.getContext().setAuthentication(authToken);
                                 
-                                logger.debug("Successfully authenticated user: {}", email);
+                                log.debug("Successfully authenticated user: {}", email);
                             } else {
-                                logger.warn("Account disabled or locked for user: {}", email);
+                                log.warn("Account disabled or locked for user: {}", email);
                             }
                         } else {
-                            logger.warn("Token validation failed for user: {}", email);
+                            log.warn("Token validation failed for user: {}", email);
                         }
                     }
                 } catch (Exception e) {
-                    logger.warn("Authentication failed for email {}: {}", email, e.getMessage());
+                    log.warn("Authentication failed for email {}: {}", email, e.getMessage());
                     // Clear any partial authentication
                     SecurityContextHolder.clearContext();
                 }
             }
         } catch (Exception e) {
-            logger.error("JWT processing error: {}", e.getMessage());
+            log.error("JWT processing error: {}", e.getMessage());
             SecurityContextHolder.clearContext();
         }
 

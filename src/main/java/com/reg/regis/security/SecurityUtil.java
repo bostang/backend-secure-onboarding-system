@@ -194,40 +194,6 @@ public class SecurityUtil {
     }
     
     /**
-     * Validate password strength - Fixed ReDoS vulnerability
-     */
-    public static boolean isStrongPassword(String password) {
-        if (password == null || password.length() < 8) {
-            return false;
-        }
-        
-        // Use simple iteration instead of regex to avoid ReDoS
-        boolean hasLower = false;
-        boolean hasUpper = false;
-        boolean hasDigit = false;
-        boolean hasSpecial = false;
-        
-        for (char c : password.toCharArray()) {
-            if (c >= 'a' && c <= 'z') {
-                hasLower = true;
-            } else if (c >= 'A' && c <= 'Z') {
-                hasUpper = true;
-            } else if (c >= '0' && c <= '9') {
-                hasDigit = true;
-            } else if ("@$!%*?&".indexOf(c) != -1) {
-                hasSpecial = true;
-            }
-            
-            // Early exit if all conditions met
-            if (hasLower && hasUpper && hasDigit && hasSpecial) {
-                break;
-            }
-        }
-        
-        return hasLower && hasUpper && hasDigit && hasSpecial;
-    }
-    
-    /**
      * Generate secure random string for tokens
      */
     public static String generateSecureRandomString(int length) {

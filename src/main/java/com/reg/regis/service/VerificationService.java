@@ -1,6 +1,5 @@
 package com.reg.regis.service;
 
-// import com.reg.regis.dto.*;
 import com.reg.regis.dto.request.EmailVerificationRequest;
 import com.reg.regis.dto.request.NikVerificationRequest;
 import com.reg.regis.dto.request.PhoneVerificationRequest;
@@ -164,7 +163,7 @@ public class VerificationService {
         
         // Customer stats
         long totalCustomers = customerRepository.countTotalCustomers();
-        long verifiedCustomers = 0; //customerRepository.countVerifiedCustomers();
+        long verifiedCustomers = 0;
         double verificationRate = totalCustomers > 0 ? 
             (double) verifiedCustomers / totalCustomers * 100 : 0;
         
