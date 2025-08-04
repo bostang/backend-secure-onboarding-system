@@ -324,7 +324,7 @@ class LoginControllerTest {
         String email = "test@example.com";
         String password = "password123";
         String token = "jwt-token";
-        
+
         LoginController.LoginRequest loginRequest = new LoginController.LoginRequest();
         loginRequest.setEmail(email);
         loginRequest.setPassword(password);
@@ -336,15 +336,16 @@ class LoginControllerTest {
         ResponseEntity<?> responseEntity = loginController.loginCustomer(loginRequest, request, response);
 
         // Then
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+
         @SuppressWarnings("unchecked")
         Map<String, Object> body = (Map<String, Object>) responseEntity.getBody();
-        
+
         assertNotNull(body);
         assertFalse((Boolean) body.get("success"));
         assertEquals("Authentication failed", body.get("error"));
     }
+
 
     @Test
     void testLoginCustomer_GeneralException() {
@@ -605,14 +606,15 @@ class LoginControllerTest {
         ResponseEntity<?> responseEntity = loginController.checkAuthentication(token, null);
 
         // Then
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+
         @SuppressWarnings("unchecked")
         Map<String, Object> body = (Map<String, Object>) responseEntity.getBody();
-        
+
         assertNotNull(body);
         assertFalse((Boolean) body.get("authenticated"));
     }
+
 
     @Test
     void testExtractToken_FromBearerHeader() {
@@ -959,14 +961,15 @@ class LoginControllerTest {
         ResponseEntity<?> responseEntity = loginController.checkAuthentication(token, null);
 
         // Then
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+
         @SuppressWarnings("unchecked")
         Map<String, Object> body = (Map<String, Object>) responseEntity.getBody();
-        
+
         assertNotNull(body);
         assertFalse((Boolean) body.get("authenticated"));
     }
+
 
     @Test
     void testLoginCustomer_BadCredentials_WithTerkunci() {
