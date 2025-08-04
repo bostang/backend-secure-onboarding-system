@@ -16,9 +16,6 @@ RUN ./mvnw dependency:go-offline
 # Copy source code
 COPY src ./src
 
-# Copy environment files with default fallback
-COPY .env* ./
-
 # Copy the Firebase service account key file using the build argument.
 # The asterisk is removed since the exact filename is now specified.
 COPY src/main/resources/${FIREBASE_SA_CRED_FILE} ./src/main/resources/
