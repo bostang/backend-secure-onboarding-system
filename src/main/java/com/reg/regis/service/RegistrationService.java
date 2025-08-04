@@ -385,45 +385,90 @@ public class RegistrationService {
         }
     }
     
+    // Constants for password strength labels
+    private static final String WEAK_STRENGTH = "lemah";
+    private static final String MEDIUM_STRENGTH = "sedang";
+    private static final String STRONG_STRENGTH = "kuat";
+    /**
+     * Check password strength - Refactored to reduce cognitive complexity
+     */
     public String checkPasswordStrength(String password) {
-        int score = 0;
+        if (password == null || password.length() < 8) {
+            return WEAK_STRENGTH;
+        }
         
-        if (password.length() >= 8) score++;
+        int score = calculatePasswordScore(password);
+        return getStrengthLabel(score);
+    }
+    /**
+     * Calculate password score based on character types
+     */
+    private int calculatePasswordScore(String password) {
+        int score = 1; // Start with 1 for length >= 8
         
-        // Use character iteration instead of regex to avoid ReDoS
+        PasswordCharacterTypes types = analyzePasswordCharacters(password);
+        
+        if (types.hasLower) score++;
+        if (types.hasUpper) score++;
+        if (types.hasDigit) score++;
+        if (types.hasSpecial) score++;
+        
+        return score;
+    }
+    /**
+     * Analyze password characters and return types found
+     */
+    private PasswordCharacterTypes analyzePasswordCharacters(String password) {
+        PasswordCharacterTypes types = new PasswordCharacterTypes();
+        
+        for (char c : password.toCharArray()) {
+            updateCharacterTypes(c, types);
+            
+            // Early exit if all types found
+            if (types.allTypesFound()) {
+                break;
+            }
+        }
+        
+        return types;
+    }
+    /**
+     * Update character types based on current character
+     */
+    private void updateCharacterTypes(char c, PasswordCharacterTypes types) {
+        if (c >= 'a' && c <= 'z') {
+            types.hasLower = true;
+        } else if (c >= 'A' && c <= 'Z') {
+            types.hasUpper = true;
+        } else if (c >= '0' && c <= '9') {
+            types.hasDigit = true;
+        } else if ("@$!%*?&".indexOf(c) != -1) {
+            types.hasSpecial = true;
+        }
+    }
+    /**
+     * Get strength label based on score
+     */
+    private String getStrengthLabel(int score) {
+        return switch (score) {
+            case 0, 1, 2 -> WEAK_STRENGTH;
+            case 3, 4 -> MEDIUM_STRENGTH;
+            case 5 -> STRONG_STRENGTH;
+            default -> WEAK_STRENGTH;
+        };
+    }
+    /**
+     * Helper class to track password character types
+     */
+    private static class PasswordCharacterTypes {
         boolean hasLower = false;
         boolean hasUpper = false;
         boolean hasDigit = false;
         boolean hasSpecial = false;
         
-        for (char c : password.toCharArray()) {
-            if (c >= 'a' && c <= 'z') {
-                hasLower = true;
-            } else if (c >= 'A' && c <= 'Z') {
-                hasUpper = true;
-            } else if (c >= '0' && c <= '9') {
-                hasDigit = true;
-            } else if ("@$!%*?&".indexOf(c) != -1) {
-                hasSpecial = true;
-            }
-            
-            // Early exit if all conditions found
-            if (hasLower && hasUpper && hasDigit && hasSpecial) {
-                break;
-            }
+        boolean allTypesFound() {
+            return hasLower && hasUpper && hasDigit && hasSpecial;
         }
-        
-        if (hasLower) score++;
-        if (hasUpper) score++;
-        if (hasDigit) score++;
-        if (hasSpecial) score++;
-        
-        return switch (score) {
-            case 0, 1, 2 -> "lemah";
-            case 3, 4 -> "sedang";
-            case 5 -> "kuat";
-            default -> "lemah";
-        };
     }
     
     public String getEmailFromToken(String token) {
