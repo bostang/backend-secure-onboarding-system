@@ -343,7 +343,7 @@ class LoginControllerTest {
 
         assertNotNull(body);
         assertFalse((Boolean) body.get("success"));
-        assertEquals("Authentication failed", body.get("error"));
+        assertEquals("Email atau password salah", body.get("error"));
     }
 
 
