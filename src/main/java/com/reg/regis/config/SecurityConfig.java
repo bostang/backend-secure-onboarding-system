@@ -92,20 +92,32 @@ public class SecurityConfig {
                 .frameOptions().deny()
                 .contentTypeOptions().and()
                 .addHeaderWriter((request, response) -> {
-                    // Security Headers
+                    // Security Headers - OWASP ZAP Compliance
                     response.setHeader("X-Content-Type-Options", "nosniff");
                     response.setHeader("X-Frame-Options", "DENY");
                     response.setHeader("X-XSS-Protection", "1; mode=block");
                     response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
                     response.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
                     
+                    // Content Security Policy - OWASP ZAP requirement
+                    response.setHeader("Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'");
+                    
+                    // Cross Origin Resource Policy
+                    response.setHeader("Cross-Origin-Resource-Policy", "same-origin");
+                    
                     // Cache Control for sensitive data
-                    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, private");
+                    response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
                     response.setHeader("Pragma", "no-cache");
                     response.setHeader("Expires", "0");
                     
+                    // API Version header
+                    response.setHeader("X-API-Version", "v1");
+                    
                     // Custom service header (non-sensitive info)
                     response.setHeader("X-Service", "Customer-Registration-Service");
+                    
+                    // Remove server identifying headers (handled by removing them)
+                    response.setHeader("Server", ""); // Empty server header
                 })
             )
             .exceptionHandling(exceptions -> exceptions
