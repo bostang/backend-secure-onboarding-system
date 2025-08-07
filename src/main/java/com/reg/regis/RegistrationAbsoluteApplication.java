@@ -13,8 +13,8 @@ public class RegistrationAbsoluteApplication {
     public static void main(String[] args) {
         // Load .env variables
         // ini berlaku untuk local development
-        // Dotenv dotenv = Dotenv.load();
-        // dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+        Dotenv dotenv = Dotenv.load();
+        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
         SpringApplication.run(RegistrationAbsoluteApplication.class, args);
         

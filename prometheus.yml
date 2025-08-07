@@ -2,11 +2,9 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
 
-# Load alert rules
 rule_files:
   - "alert-rules.yml"
 
-# Alertmanager configuration
 alerting:
   alertmanagers:
     - static_configs:
@@ -14,8 +12,37 @@ alerting:
           - alertmanager:9093
 
 scrape_configs:
+  # Your Spring Boot app
   - job_name: 'secure-onboarding-spring-boot-app'
     metrics_path: '/api/actuator/prometheus'
     scrape_interval: 5s
     static_configs:
       - targets: ['host.docker.internal:8080']
+
+  # GKE API Server (replace with your cluster endpoint)
+  - job_name: 'gke-apiserver'
+    static_configs:
+      - targets: ['34.xxx.xxx.xxx:443']  # Your GKE cluster external IP
+    scheme: https
+    metrics_path: '/metrics'
+    tls_config:
+      insecure_skip_verify: true
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+  # GKE Nodes (if accessible externally)
+  - job_name: 'gke-nodes'
+    static_configs:
+      - targets: ['34.xxx.xxx.xxx:443']  # Your GKE cluster IP
+    scheme: https
+    metrics_path: '/api/v1/nodes/metrics'
+    tls_config:
+      insecure_skip_verify: true
+
+  # cAdvisor untuk container metrics
+  - job_name: 'gke-cadvisor'
+    static_configs:
+      - targets: ['34.xxx.xxx.xxx:443']  # Your GKE cluster IP
+    scheme: https
+    metrics_path: '/api/v1/nodes/metrics/cadvisor'
+    tls_config:
+      insecure_skip_verify: true
