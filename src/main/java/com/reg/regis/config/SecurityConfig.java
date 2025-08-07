@@ -77,6 +77,7 @@ public class SecurityConfig {
             .requestMatchers("/auth/refresh-token").authenticated()
             .requestMatchers("/auth/verify-email").authenticated()
             .requestMatchers("/protected-resource").authenticated()
+            .requestMatchers("/api/**").authenticated()
             
             .anyRequest().authenticated()
         )
