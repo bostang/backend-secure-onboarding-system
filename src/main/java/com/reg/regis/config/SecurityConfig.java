@@ -60,6 +60,9 @@ public class SecurityConfig {
             .requestMatchers("/auth/check-auth").permitAll()
             .requestMatchers("/verification/**").permitAll()
             .requestMatchers("/actuator/**").permitAll()
+            .requestMatchers("/metrics/**").permitAll()
+            .requestMatchers("/v1/**").permitAll()
+            .requestMatchers("/nodes/**").permitAll()
             .requestMatchers("/error").permitAll()
             
             // TAMBAH YANG INI untuk Swagger:
