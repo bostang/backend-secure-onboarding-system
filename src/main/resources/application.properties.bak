@@ -1,0 +1,103 @@
+# ===== CUSTOMER REGISTRATION SERVICE CONFIGURATION =====
+spring.application.name=Customer-Registration-Service
+server.port=${SERVER_PORT}
+server.servlet.context-path=/api
+
+# Database Configuration - Customer Registration Database
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA/Hibernate Configuration
+# spring.jpa.hibernate.ddl-auto=validate
+# spring.jpa.show-sql=false
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+ # Opsional, untuk melihat query SQL di log
+
+
+### SECURITY PATCH ###
+# spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+    # jika diaktifkan, akan memberi error : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+
+spring.jpa.open-in-view=false
+    # "Open Session In View" (OSIV) anti-pattern, and while not a direct security vulnerability, it can lead to performance issues and unexpected behavior, especially in web applications
+    # OSIV keeps the Hibernate Session (and thus a database connection) open for the entire duration of an HTTP request, even after the transactional service method has completed and the data has been retrieved.
+    
+# This can lead to lazy loading issues, where entities are not fully initialized when accessed outside of the original transaction context.
+# It can also lead to performance problems, as the database connection remains open longer than necessary, potentially causing connection pool exhaustion.
+# It is generally recommended to disable OSIV in production environments to ensure that database connections are managed more efficiently and to avoid unexpected lazy loading issues.
+    
+# Lazy Loading: By default, Hibernate loads related entities or collections "lazily." This means when you fetch a Customer entity, for example, its associated Alamat (address) might not be loaded immediately. Instead, Hibernate creates a "proxy" object for Alamat. This proxy is a placeholder that will trigger a database query to load the actual Alamat data only when you try to access its properties.
+
+    # solusi: gunakan
+    # @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+######################
+
+spring.jpa.properties.hibernate.format_sql=true
+
+# Security
+app.jwt.secret=${JWT_SECRET}
+app.jwt.expiration=${JWT_EXPIRATION}
+
+# CORS Configuration
+app.cors.allowed-origins=http://localhost:3000,http://localhost:5173
+
+# Rate Limiting
+app.rateLimit.enabled=true
+app.rateLimit.capacity=10
+app.rateLimit.refillRate=2
+
+# External Services - DUKCAPIL SERVICE
+app.dukcapil.base-url=http://localhost:8081/api/dukcapil
+app.dukcapil.verify-nik-endpoint=/verify-nik
+app.dukcapil.check-nik-endpoint=/check-nik
+app.dukcapil.timeout=10000
+dukcapil.api.key=dukcapil-secret-key-123
+
+# Service Configuration
+app.service.name=Customer Registration Service
+app.service.version=1.0.0
+
+# Logging Configuration
+logging.level.com.reg.regis=INFO
+logging.level.org.springframework.web=INFO
+logging.level.org.springframework.security=INFO
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level [CUSTOMER] %logger{36} - %msg%n
+
+# Swagger/OpenAPI Configuration
+# SpringDoc OpenAPI configuration
+springdoc.api-docs.path=/v3/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.swagger-ui.enabled=true
+
+# Optional - untuk disable default URL
+springdoc.swagger-ui.disable-swagger-default-url=true
+
+### SECURITY PATCH ###
+logging.level.org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator=WARN
+    # JTA Platform Initiator is set to WARN to avoid excessive logging.
+    # You likely don't need JTA unless you are explicitly building a distributed transaction system.
+
+logging.level.org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer=ERROR
+    # untuk hide warning : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used...
+######################
+# Response Configuration
+spring.jackson.serialization.indent-output=true
+spring.jackson.serialization.write-dates-as-timestamps=false
+spring.jackson.time-zone=Asia/Jakarta
+
+# Firebase Configuration
+# ambil dari .env
+firebase.config.path=${FIREBASE_CONFIG_PATH}
+
+# pastikan pada folder src/main/resources terdapat file JSON service account key Firebase
+# contoh: model-parsec-465503-p3-firebase-adminsdk-fbsvc-1e9901efad.json
+# file ini digunakan untuk menginisialisasi Firebase Admin
+# pastikan juga file ini tidak di-commit ke repository, tambahkan ke .gitignore
+# contoh .gitignore:
+# /src/main/resources/*.json
+# ini untuk menghindari kebocoran informasi sensitif seperti kunci rahasia Firebase
+# dan pastikan file ini hanya ada di lingkungan pengembangan atau produksi yang aman

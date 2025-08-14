@@ -1,0 +1,55 @@
+# application.yml
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    # driver-class-name: org.postgresql.Driver
+  
+  # jpa:
+  #   database-platform: org.hibernate.dialect.PostgreSQLDialect
+  #   hibernate:
+  #     ddl-auto: validate
+  #   show-sql: true
+  #   properties:
+  #     hibernate:
+  #       format_sql: true
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:5173,https://rank-aspect-strange-navigator.trycloudflare.com
+  
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION}  # 24 hours
+  
+  rateLimit:
+    enabled: true
+    capacity: 10
+    refillRate: 2
+
+# Logging untuk debug CORS
+logging:
+  level:
+    org.springframework.web.cors: DEBUG
+    org.springframework.security: DEBUG
+    com.reg.regis: INFO
+
+# Tambahkan di application.yml
+springdoc:
+  api-docs:
+    path: /api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
+  show-actuator: false

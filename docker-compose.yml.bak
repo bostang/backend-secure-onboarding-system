@@ -1,0 +1,107 @@
+# docker-compose.yml - Multi Database Setup
+version: '3.8'
+
+services:
+  # Primary Database - Customer Registration
+  postgres-customer:
+    image: postgres:15-alpine
+    container_name: customer_registration_db
+    environment:
+      POSTGRES_DB: customer_registration
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 
+    ports:
+      - "5432:5432"
+    volumes:
+      - customer_data:/var/lib/postgresql/data
+      - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/01-create-tables.sql
+    networks:
+      - registration-network
+    restart: unless-stopped
+
+  # Secondary Database - Dukcapil KTP
+  postgres-dukcapil:
+    image: postgres:15-alpine
+    container_name: dukcapil_db
+    environment:
+      POSTGRES_DB: dukcapil_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 
+    ports:
+      - "5433:5432"  # Different port untuk avoid conflict
+    volumes:
+      - dukcapil_data:/var/lib/postgresql/data
+      - ./sql/create_dukcapil_tables.sql:/docker-entrypoint-initdb.d/01-create-dukcapil.sql
+    networks:
+      - registration-network
+    restart: unless-stopped
+
+  # Application Service
+  registration-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: registration_app
+    environment:
+      # Primary Database
+      DB_URL: jdbc:postgresql://postgres-customer:5432/customer_registration
+      DB_USERNAME: postgres
+      DB_PASSWORD: 
+      
+      # Dukcapil Database  
+      DUKCAPIL_DB_URL: jdbc:postgresql://postgres-dukcapil:5432/dukcapil_db
+      DUKCAPIL_DB_USERNAME: ktp_reader
+      DUKCAPIL_DB_PASSWORD: ktp_pass123
+      
+      # JWT
+      JWT_SECRET: mySecretKey123456789mySecretKey123456789
+      JWT_EXPIRATION: 86400000
+      
+      # Server
+      SERVER_PORT: 8080
+      
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-customer
+      - postgres-dukcapil
+    networks:
+      - registration-network
+    restart: unless-stopped
+
+  # pgAdmin untuk Database Management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin_registration
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres-customer
+      - postgres-dukcapil
+    networks:
+      - registration-network
+    restart: unless-stopped
+
+volumes:
+  customer_data:
+    driver: local
+  dukcapil_data:
+    driver: local
+
+networks:
+  registration-network:
+    driver: bridge
+
+# Development override file (docker-compose.override.yml)
+# Untuk development, buat file docker-compose.override.yml:
+# version: '3.8'
+# services:
+#   registration-app:
+#     volumes:
+#       - ./src:/app/src
+#       - ./target:/app/target
+#     environment:
+#       SPRING_PROFILES_ACTIVE: dev
